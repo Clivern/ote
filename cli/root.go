@@ -15,7 +15,7 @@ var config string
 
 var rootCmd = &cobra.Command{
 	Use: "ote",
-	Short: `🐗 A Fast, Secure MCP Gateway, Set up in Minutes.
+	Short: `🐀 OpenTelemetry in Production with Dash0
 
 If you have any suggestions, bug reports, or annoyances please report
 them to our issue tracker at <https://github.com/clivern/ote/issues>`,
