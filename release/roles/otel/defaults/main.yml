@@ -59,4 +59,3 @@ otel_collector_config:
           - batch
         exporters:
           - otlp/dash0
-

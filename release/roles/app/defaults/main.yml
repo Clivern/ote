@@ -36,4 +36,3 @@ ote_config:
       status: "off"
       crt_path: "cert/server.crt"
       key_path: "cert/server.key"
-

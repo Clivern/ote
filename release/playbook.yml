@@ -13,4 +13,3 @@
   roles:
     - role: roles/otel
     - role: roles/app
-
