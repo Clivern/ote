@@ -1,6 +1,6 @@
 FROM golang:1.25.4
 
-ARG OTE_VERSION=0.1.3
+ARG OTE_VERSION=0.1.4
 
 RUN mkdir -p /app/configs
 RUN mkdir -p /app/var/logs
