@@ -1,6 +1,6 @@
 ---
-ote_version: "0.1.1"
-ote_download_url: "https://github.com/Clivern/Ote/releases/download/v{{ ote_version }}/ote_Linux_x86_64.tar.gz"
+ote_version: "0.1.2"
+ote_download_url: "https://github.com/Clivern/Ote/releases/download/v{{ ote_version }}/ote_linux_x86_64.tar.gz"
 
 ote_install_dir: "/opt/ote"
 ote_download_dir: "/tmp"
