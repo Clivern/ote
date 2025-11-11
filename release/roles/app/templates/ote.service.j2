@@ -1,0 +1,20 @@
+[Unit]
+Description=Ote Application
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User={{ ote_user }}
+Group={{ ote_group }}
+WorkingDirectory={{ ote_install_dir }}
+ExecStart={{ ote_binary_path }} server --config {{ ote_config_file }}
+Restart=on-failure
+RestartSec=5s
+{% for key, value in ote_service_env.items() %}
+Environment="{{ key }}={{ value }}"
+{% endfor %}
+
+[Install]
+WantedBy=multi-user.target
+

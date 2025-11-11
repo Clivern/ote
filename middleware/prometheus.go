@@ -76,7 +76,7 @@ func (mrw *metricsResponseWriter) Write(b []byte) (int, error) {
 func PrometheusMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		// Skip metrics endpoint to avoid recursion
-		if r.URL.Path == "/api/v1/_metrics" {
+		if r.URL.Path == "/_metrics" {
 			next.ServeHTTP(w, r)
 			return
 		}

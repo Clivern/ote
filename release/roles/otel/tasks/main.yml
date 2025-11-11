@@ -1,0 +1,82 @@
+---
+- name: Ensure otel collector group exists
+  ansible.builtin.group:
+    name: "{{ otel_collector_group }}"
+    system: true
+
+- name: Ensure otel collector user exists
+  ansible.builtin.user:
+    name: "{{ otel_collector_user }}"
+    group: "{{ otel_collector_group }}"
+    system: true
+    shell: /usr/sbin/nologin
+    create_home: false
+
+- name: Create configuration directory
+  ansible.builtin.file:
+    path: "{{ otel_collector_config_dir }}"
+    state: directory
+    owner: "{{ otel_collector_user }}"
+    group: "{{ otel_collector_group }}"
+    mode: "0755"
+
+- name: Create installation directory
+  ansible.builtin.file:
+    path: "{{ otel_collector_install_dir }}"
+    state: directory
+    owner: "{{ otel_collector_user }}"
+    group: "{{ otel_collector_group }}"
+    mode: "0755"
+
+- name: Download otel collector archive
+  ansible.builtin.get_url:
+    url: "{{ otel_collector_download_url }}"
+    dest: "{{ otel_collector_download_dir }}/otelcol.tar.gz"
+    mode: "0644"
+    checksum: "{{ otel_collector_checksum | default(omit) }}"
+
+- name: Unarchive otel collector
+  ansible.builtin.unarchive:
+    src: "{{ otel_collector_download_dir }}/otelcol.tar.gz"
+    dest: "{{ otel_collector_install_dir }}"
+    remote_src: true
+    owner: "{{ otel_collector_user }}"
+    group: "{{ otel_collector_group }}"
+    mode: "0755"
+
+- name: Install otel collector binary
+  ansible.builtin.copy:
+    src: "{{ otel_collector_install_dir }}/otelcol"
+    dest: "{{ otel_collector_binary_path }}"
+    owner: "root"
+    group: "root"
+    mode: "0755"
+    remote_src: true
+
+- name: Install otel collector configuration
+  ansible.builtin.template:
+    src: "config.yaml.j2"
+    dest: "{{ otel_collector_config_file }}"
+    owner: "{{ otel_collector_user }}"
+    group: "{{ otel_collector_group }}"
+    mode: "0644"
+  notify: Restart otel collector
+
+- name: Install otel collector systemd service
+  ansible.builtin.template:
+    src: "otelcol.service.j2"
+    dest: "/etc/systemd/system/{{ otel_collector_service_name }}.service"
+    owner: "root"
+    group: "root"
+    mode: "0644"
+  notify:
+    - Reload systemd
+    - Restart otel collector
+
+- name: Ensure otel collector service is enabled and running
+  ansible.builtin.systemd:
+    name: "{{ otel_collector_service_name }}"
+    enabled: true
+    state: started
+    daemon_reload: false
+

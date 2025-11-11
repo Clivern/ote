@@ -1,0 +1,39 @@
+---
+ote_version: "0.1.1"
+ote_download_url: "https://github.com/Clivern/Ote/releases/download/v{{ ote_version }}/ote_Linux_x86_64.tar.gz"
+
+ote_install_dir: "/opt/ote"
+ote_download_dir: "/tmp"
+ote_binary_path: "/usr/local/bin/ote"
+
+ote_user: "ote"
+ote_group: "ote"
+
+ote_config_dir: "/etc/ote"
+ote_config_file: "{{ ote_config_dir }}/config.yml"
+
+ote_log_dir: "/var/log/ote"
+ote_log_file: "{{ ote_log_dir }}/ote.log"
+
+ote_service_name: "ote"
+ote_service_env: {}
+
+ote_config:
+  app:
+    name: "ote"
+    mode: "prod"
+    port: 8000
+    hostname: "0.0.0.0"
+    timeout: 50
+    metrics:
+      username: "admin"
+      secret: "secret"
+    log:
+      level: "info"
+      output: "{{ ote_log_file }}"
+      format: "json"
+    tls:
+      status: "off"
+      crt_path: "cert/server.crt"
+      key_path: "cert/server.key"
+

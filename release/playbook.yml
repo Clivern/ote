@@ -1,0 +1,16 @@
+---
+- name: Deploy OpenTelemetry Collector and Ote application
+  hosts: ote_server
+  become: true
+  vars:
+    # Override defaults here as needed
+    otel_collector_version: "0.139.0"
+    ote_version: "0.1.1"
+    otel_collector_otlp_endpoint: "xxxxx.dash0.com:4317"
+    otel_collector_otlp_headers:
+      Authorization: "Bearer yyyyyyyy"
+      "Dash0-Dataset": "default"
+  roles:
+    - role: roles/otel
+    - role: roles/app
+

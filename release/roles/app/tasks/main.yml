@@ -1,0 +1,90 @@
+---
+- name: Ensure ote group exists
+  ansible.builtin.group:
+    name: "{{ ote_group }}"
+    system: true
+
+- name: Ensure ote user exists
+  ansible.builtin.user:
+    name: "{{ ote_user }}"
+    group: "{{ ote_group }}"
+    system: true
+    shell: /usr/sbin/nologin
+    create_home: false
+
+- name: Create configuration directory
+  ansible.builtin.file:
+    path: "{{ ote_config_dir }}"
+    state: directory
+    owner: "{{ ote_user }}"
+    group: "{{ ote_group }}"
+    mode: "0755"
+
+- name: Ensure log directory exists
+  ansible.builtin.file:
+    path: "{{ ote_log_dir }}"
+    state: directory
+    owner: "{{ ote_user }}"
+    group: "{{ ote_group }}"
+    mode: "0755"
+
+- name: Create installation directory
+  ansible.builtin.file:
+    path: "{{ ote_install_dir }}"
+    state: directory
+    owner: "{{ ote_user }}"
+    group: "{{ ote_group }}"
+    mode: "0755"
+
+- name: Download ote archive
+  ansible.builtin.get_url:
+    url: "{{ ote_download_url }}"
+    dest: "{{ ote_download_dir }}/ote.tar.gz"
+    mode: "0644"
+    checksum: "{{ ote_checksum | default(omit) }}"
+
+- name: Unarchive ote binary
+  ansible.builtin.unarchive:
+    src: "{{ ote_download_dir }}/ote.tar.gz"
+    dest: "{{ ote_install_dir }}"
+    remote_src: true
+    owner: "{{ ote_user }}"
+    group: "{{ ote_group }}"
+    mode: "0755"
+
+- name: Install ote binary
+  ansible.builtin.copy:
+    src: "{{ ote_install_dir }}/ote"
+    dest: "{{ ote_binary_path }}"
+    owner: "root"
+    group: "root"
+    mode: "0755"
+    remote_src: true
+
+- name: Install ote configuration
+  ansible.builtin.template:
+    src: "config.yml.j2"
+    dest: "{{ ote_config_file }}"
+    owner: "{{ ote_user }}"
+    group: "{{ ote_group }}"
+    mode: "0644"
+  notify: Restart ote service
+
+- name: Install ote systemd service
+  ansible.builtin.template:
+    src: "ote.service.j2"
+    dest: "/etc/systemd/system/{{ ote_service_name }}.service"
+    owner: "root"
+    group: "root"
+    mode: "0644"
+  notify:
+    - Reload systemd
+    - Restart ote service
+
+- name: Ensure ote service is enabled and running
+  ansible.builtin.systemd:
+    name: "{{ ote_service_name }}"
+    enabled: true
+    state: started
+    daemon_reload: false
+
