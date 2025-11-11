@@ -1,14 +1,18 @@
+# Copyright 2025 Clivern. All rights reserved.
+# Use of this source code is governed by the MIT
+# license that can be found in the LICENSE file.
+
 ---
-- name: Deploy OpenTelemetry Collector and Ote application
+- name: Deploy otel collector and ote app
   hosts: ote_server
   become: true
   vars:
-    # Override defaults here as needed
+    # Override defaults here as needed or use a a vault file
     otel_collector_version: "0.139.0"
-    ote_version: "0.1.3"
-    otel_collector_otlp_endpoint: "xxxxx.dash0.com:4317"
+    ote_version: "0.1.4"
+    otel_collector_otlp_endpoint: "XXXXXXX.dash0.com:4317"
     otel_collector_otlp_headers:
-      Authorization: "Bearer yyyyyyyy"
+      Authorization: "Bearer YYYYYYYYYY"
       "Dash0-Dataset": "default"
   roles:
     - role: roles/otel
