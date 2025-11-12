@@ -1,1 +1,55 @@
-{{ otel_collector_config | to_nice_yaml(indent=2) }}
+receivers:
+  otlp:
+    protocols:
+      grpc: {}
+      http: {}
+  prometheus:
+    config:
+      scrape_configs:
+        - job_name: ote_app
+          metrics_path: /_metrics
+          basic_auth:
+            username: "{{ otel_collector_ote_server_metrics_username }}"
+            password: "{{ otel_collector_ote_server_metrics_secret }}"
+          static_configs:
+            - targets:
+                - "{{ otel_collector_ote_server_metrics_target }}"
+  filelog:
+    include:
+      - "{{ otel_collector_ote_server_log_file }}"
+    start_at: end
+
+processors:
+  batch: {}
+
+exporters:
+  otlp/dash0:
+    endpoint: "{{ otel_collector_dash0_otlp_endpoint }}"
+    headers:
+      Authorization: "Bearer {{ otel_collector_dash0_otlp_authorization_token }}"
+      "Dash0-Dataset": "{{ otel_collector_dash0_dataset_name }}"
+
+service:
+  pipelines:
+    traces:
+      receivers:
+        - otlp
+      processors:
+        - batch
+      exporters:
+        - otlp/dash0
+    metrics:
+      receivers:
+        - otlp
+        - prometheus
+      processors:
+        - batch
+      exporters:
+        - otlp/dash0
+    logs:
+      receivers:
+        - filelog
+      processors:
+        - batch
+      exporters:
+        - otlp/dash0

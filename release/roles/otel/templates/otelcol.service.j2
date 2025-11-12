@@ -7,13 +7,10 @@ Wants=network-online.target
 Type=simple
 User={{ otel_collector_user }}
 Group={{ otel_collector_group }}
-ExecStart={{ otel_collector_binary_path }} --config {{ otel_collector_config_file }}
+ExecStart=/usr/local/bin/otelcol-contrib --config /etc/otelcol/config.yaml
 Restart=on-failure
 RestartSec=5s
 LimitNOFILE=65535
-{% for key, value in otel_collector_service_env.items() %}
-Environment="{{ key }}={{ value }}"
-{% endfor %}
 
 [Install]
 WantedBy=multi-user.target

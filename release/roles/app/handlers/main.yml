@@ -3,11 +3,11 @@
 # license that can be found in the LICENSE file.
 
 ---
-- name: Reload systemd
+- name: reload systemd
   ansible.builtin.systemd:
     daemon_reload: true
 
-- name: Restart ote service
+- name: restart ote service
   ansible.builtin.systemd:
-    name: "{{ ote_service_name }}"
+    name: "ote"
     state: restarted

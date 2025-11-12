@@ -1,1 +1,17 @@
-{{ ote_config | to_nice_yaml(indent=2) }}
+app:
+    name: "ote"
+    mode: "prod"
+    port: 8000
+    hostname: "0.0.0.0"
+    timeout: 50
+    metrics:
+        username: "{{ ote_metrics_username }}"
+        secret: "{{ ote_metrics_secret }}"
+    log:
+        level: "info"
+        output: "{{ ote_log_file }}"
+        format: "json"
+    tls:
+        status: "off"
+        crt_path: "cert/server.crt"
+        key_path: "cert/server.key"

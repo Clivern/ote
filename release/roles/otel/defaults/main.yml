@@ -4,72 +4,17 @@
 
 ---
 otel_collector_version: "0.139.0"
-otel_collector_os: "linux"
-otel_collector_arch: "amd64"
-otel_collector_download_url: "https://github.com/open-telemetry/opentelemetry-collector-releases/releases/download/v{{ otel_collector_version }}/otelcol-contrib_{{ otel_collector_version }}_{{ otel_collector_os }}_{{ otel_collector_arch }}.tar.gz"
-
-otel_collector_install_dir: "/opt/otelcol"
-otel_collector_download_dir: "/tmp"
+otel_collector_download_url: "https://github.com/open-telemetry/opentelemetry-collector-releases/releases/download/v{{ otel_collector_version }}/otelcol-contrib_{{ otel_collector_version }}_linux_amd64.tar.gz"
 otel_collector_binary_path: "/usr/local/bin/otelcol-contrib"
-otel_collector_config_dir: "/etc/otelcol"
-otel_collector_config_file: "{{ otel_collector_config_dir }}/config.yaml"
 
 otel_collector_user: "otelcol"
 otel_collector_group: "otelcol"
 
-otel_collector_service_name: "otelcol"
-otel_collector_service_env: {}
-otel_collector_otlp_endpoint: "localhost:4317"
-otel_collector_otlp_headers: {}
+otel_collector_dash0_otlp_endpoint: "XXXXXXX.dash0.com:4317"
+otel_collector_dash0_otlp_authorization_token: "YYYYYYYYY"
+otel_collector_dash0_dataset_name: "default"
 
-otel_collector_config:
-  receivers:
-    otlp:
-      protocols:
-        grpc: {}
-        http: {}
-    prometheus:
-      config:
-        scrape_configs:
-          - job_name: "ote_app"
-            metrics_path: "/_metrics"
-            basic_auth:
-              username: "admin"
-              password: "secret"
-            static_configs:
-              - targets:
-                  - "localhost:8000"
-    filelog:
-      include:
-        - "/var/log/ote/ote.log"
-      start_at: "end"
-  processors:
-    batch: {}
-  exporters:
-    otlp/dash0:
-      endpoint: "{{ otel_collector_otlp_endpoint }}"
-      headers: "{{ otel_collector_otlp_headers }}"
-  service:
-    pipelines:
-      traces:
-        receivers:
-          - otlp
-        processors:
-          - batch
-        exporters:
-          - otlp/dash0
-      metrics:
-        receivers:
-          - otlp
-          - prometheus
-        processors:
-          - batch
-        exporters:
-          - otlp/dash0
-      logs:
-        receivers:
-          - filelog
-        processors:
-          - batch
-        exporters:
-          - otlp/dash0
+otel_collector_ote_server_metrics_username: "admin"
+otel_collector_ote_server_metrics_secret: "secret"
+otel_collector_ote_server_log_file: "/var/log/ote/ote.log"
+otel_collector_ote_server_metrics_target: "localhost:8000"
