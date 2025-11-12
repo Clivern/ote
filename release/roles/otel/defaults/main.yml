@@ -6,11 +6,11 @@
 otel_collector_version: "0.139.0"
 otel_collector_os: "linux"
 otel_collector_arch: "amd64"
-otel_collector_download_url: "https://github.com/open-telemetry/opentelemetry-collector-releases/releases/download/v{{ otel_collector_version }}/otelcol_{{ otel_collector_version }}_{{ otel_collector_os }}_{{ otel_collector_arch }}.tar.gz"
+otel_collector_download_url: "https://github.com/open-telemetry/opentelemetry-collector-releases/releases/download/v{{ otel_collector_version }}/otelcol-contrib_{{ otel_collector_version }}_{{ otel_collector_os }}_{{ otel_collector_arch }}.tar.gz"
 
 otel_collector_install_dir: "/opt/otelcol"
 otel_collector_download_dir: "/tmp"
-otel_collector_binary_path: "/usr/local/bin/otelcol"
+otel_collector_binary_path: "/usr/local/bin/otelcol-contrib"
 otel_collector_config_dir: "/etc/otelcol"
 otel_collector_config_file: "{{ otel_collector_config_dir }}/config.yaml"
 
@@ -39,6 +39,10 @@ otel_collector_config:
             static_configs:
               - targets:
                   - "localhost:8000"
+    filelog:
+      include:
+        - "/var/log/ote/ote.log"
+      start_at: "end"
   processors:
     batch: {}
   exporters:
@@ -58,6 +62,13 @@ otel_collector_config:
         receivers:
           - otlp
           - prometheus
+        processors:
+          - batch
+        exporters:
+          - otlp/dash0
+      logs:
+        receivers:
+          - filelog
         processors:
           - batch
         exporters:

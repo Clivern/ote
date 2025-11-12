@@ -35,13 +35,13 @@
 - name: Download otel collector archive
   ansible.builtin.get_url:
     url: "{{ otel_collector_download_url }}"
-    dest: "{{ otel_collector_download_dir }}/otelcol.tar.gz"
+    dest: "{{ otel_collector_download_dir }}/otelcol-contrib.tar.gz"
     mode: "0644"
     checksum: "{{ otel_collector_checksum | default(omit) }}"
 
 - name: Unarchive otel collector
   ansible.builtin.unarchive:
-    src: "{{ otel_collector_download_dir }}/otelcol.tar.gz"
+    src: "{{ otel_collector_download_dir }}/otelcol-contrib.tar.gz"
     dest: "{{ otel_collector_install_dir }}"
     remote_src: true
     owner: "{{ otel_collector_user }}"
@@ -50,7 +50,7 @@
 
 - name: Install otel collector binary
   ansible.builtin.copy:
-    src: "{{ otel_collector_install_dir }}/otelcol"
+    src: "{{ otel_collector_install_dir }}/otelcol-contrib"
     dest: "{{ otel_collector_binary_path }}"
     owner: "root"
     group: "root"
