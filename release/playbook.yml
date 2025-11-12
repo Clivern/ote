@@ -9,7 +9,7 @@
   vars:
     # Override defaults here as needed or use a a vault file
     otel_collector_version: "0.139.0"
-    ote_version: "0.1.4"
+    ote_version: "0.1.5"
     otel_collector_otlp_endpoint: "XXXXXXX.dash0.com:4317"
     otel_collector_otlp_headers:
       Authorization: "Bearer YYYYYYYYYY"
