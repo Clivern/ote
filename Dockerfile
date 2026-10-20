@@ -1,4 +1,4 @@
-FROM golang:1.25.4
+FROM golang:1.27.3
 
 ARG OTE_VERSION=0.1.4
 
